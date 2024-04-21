@@ -5,6 +5,7 @@ import {
   Link,
   Button,
   Space,
+  Message,
 } from '@arco-design/web-react';
 import { FormInstance } from '@arco-design/web-react/es/Form';
 import { IconLock, IconUser } from '@arco-design/web-react/icon';
@@ -14,14 +15,16 @@ import useStorage from '@/utils/useStorage';
 import useLocale from '@/utils/useLocale';
 import locale from './locale';
 import styles from './style/index.module.less';
+import { post } from '@/utils/http';
 
 export default function LoginForm() {
   const formRef = useRef<FormInstance>();
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
   const [loginParams, setLoginParams, removeLoginParams] =
     useStorage('loginParams');
-
+  const [userData, setUserData] = useStorage('userData');
   const t = useLocale(locale);
 
   const [rememberPassword, setRememberPassword] = useState(!!loginParams);
@@ -39,22 +42,26 @@ export default function LoginForm() {
     window.location.href = '/';
   }
 
-  function login(params) {
+  async function login(params) {
     setErrorMessage('');
     setLoading(true);
-    axios
-      .post('/api/user/login', params)
-      .then((res) => {
-        const { status, msg } = res.data;
-        if (status === 'ok') {
-          afterLoginSuccess(params);
-        } else {
-          setErrorMessage(msg || t['login.form.login.errMsg']);
-        }
-      })
-      .finally(() => {
+    try {
+      const { code, msg, data } = isRegister
+        ? await post('landlord/register', params)
+        : await post('landlord', params);
+      if (code == 200) {
+        setUserData(JSON.stringify(data));
+        afterLoginSuccess(params);
+        Message.success(isRegister ? '注册并登录成功!' : '登录成功!');
         setLoading(false);
-      });
+      } else {
+        setErrorMessage(msg);
+        setLoading(false);
+      }
+    } catch (error: any) {
+      setErrorMessage(error.toString());
+      setLoading(false);
+    }
   }
 
   function onSubmitClick() {
@@ -77,17 +84,17 @@ export default function LoginForm() {
     <div className={styles['login-form-wrapper']}>
       <div className={styles['login-form-title']}>{t['login.form.title']}</div>
       <div className={styles['login-form-sub-title']}>
-        {t['login.form.title']}
+        {isRegister ? '注册账号' : '登录账号'}
       </div>
       <div className={styles['login-form-error-msg']}>{errorMessage}</div>
       <Form
         className={styles['login-form']}
         layout="vertical"
         ref={formRef}
-        initialValues={{ userName: 'admin', password: 'admin' }}
+        initialValues={{ username: 'admin', password: 'admin' }}
       >
         <Form.Item
-          field="userName"
+          field="username"
           rules={[{ required: true, message: t['login.form.userName.errMsg'] }]}
         >
           <Input
@@ -114,14 +121,17 @@ export default function LoginForm() {
             <Link>{t['login.form.forgetPassword']}</Link>
           </div>
           <Button type="primary" long onClick={onSubmitClick} loading={loading}>
-            {t['login.form.login']}
+            {isRegister ? '注册' : '登录'}
           </Button>
           <Button
             type="text"
             long
             className={styles['login-form-register-btn']}
+            onClick={() => {
+              setIsRegister(!isRegister);
+            }}
           >
-            {t['login.form.register']}
+            {isRegister ? '登录账号' : '注册账号'}
           </Button>
         </Space>
       </Form>
