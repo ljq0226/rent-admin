@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import qs from 'query-string';
 import NProgress from 'nprogress';
 import Navbar from './components/NavBar';
+import AddList from './pages/listings/addlist';
 import Footer from './components/Footer';
 import useRoute, { IRoute } from '@/routes';
 import { isArray } from './utils/is';
@@ -36,6 +37,8 @@ const Content = Layout.Content;
 function getIconFromKey(key) {
   switch (key) {
     case 'dashboard':
+      return <IconDashboard className={styles.icon} />;
+    case 'listings':
       return <IconDashboard className={styles.icon} />;
     case 'list':
       return <IconList className={styles.icon} />;
@@ -266,6 +269,7 @@ function PageLayout() {
               )}
               <Content>
                 <Switch>
+                  <Route path="/listings/list/addlist" component={AddList} />
                   {flattenRoutes.map((route, index) => {
                     return (
                       <Route
@@ -275,6 +279,7 @@ function PageLayout() {
                       />
                     );
                   })}
+
                   <Route exact path="/">
                     <Redirect to={`/${defaultRoute}`} />
                   </Route>

@@ -7,7 +7,6 @@ import {
   Skeleton,
   Link,
 } from '@arco-design/web-react';
-import { useSelector } from 'react-redux';
 import { IconCaretUp } from '@arco-design/web-react/icon';
 import OverviewAreaLine from '@/components/Chart/overview-area-line';
 import axios from 'axios';
@@ -18,6 +17,7 @@ import IconCalendar from './assets/calendar.svg';
 import IconComments from './assets/comments.svg';
 import IconContent from './assets/content.svg';
 import IconIncrease from './assets/increase.svg';
+import useStorage from '@/utils/useStorage';
 
 const { Row, Col } = Grid;
 
@@ -60,8 +60,7 @@ function Overview() {
   const [data, setData] = useState<DataType>({});
   const [loading, setLoading] = useState(true);
   const t = useLocale(locale);
-
-  const userInfo = useSelector((state: any) => state.userInfo || {});
+  const [userInfo] = useStorage('userData');
 
   const fetchData = () => {
     setLoading(true);
@@ -83,7 +82,7 @@ function Overview() {
     <Card>
       <Typography.Title heading={5}>
         {t['workplace.welcomeBack']}
-        {userInfo.name}
+        {userInfo.username}
       </Typography.Title>
       <Divider />
       <Row>

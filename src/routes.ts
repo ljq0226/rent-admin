@@ -30,6 +30,23 @@ export const routes: IRoute[] = [
     ],
   },
   {
+    name: 'menu.listings',
+    key: 'listings',
+    children: [
+      {
+        name: 'menu.listings.list',
+        key: 'listings/list',
+      },
+      {
+        name: 'menu.listings.monitor',
+        key: 'listings/monitor',
+        requiredPermissions: [
+          { resource: 'menu.listings.monitor', actions: ['write'] },
+        ],
+      },
+    ],
+  },
+  {
     name: 'menu.visualization',
     key: 'visualization',
     children: [
@@ -201,7 +218,6 @@ const useRoute = (userPermission): [IRoute[], string] => {
         arr.push({ ...route });
       }
     }
-
     return arr;
   };
 

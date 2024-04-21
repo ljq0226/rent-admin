@@ -66,6 +66,8 @@ const i18n = {
     'menu.form': '表单页',
     'menu.profile': '详情页',
     'menu.visualization': '数据可视化',
+    'menu.listings': '房源管理',
+    'menu.listings.list': '我的房源',
     'menu.user': '个人中心',
     'menu.exception.403': '403',
     'menu.exception.404': '404',
