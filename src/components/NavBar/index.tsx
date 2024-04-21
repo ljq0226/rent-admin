@@ -39,8 +39,7 @@ import { generatePermission } from '@/routes';
 
 function Navbar({ show }: { show: boolean }) {
   const t = useLocale();
-  const { userInfo, userLoading } = useSelector((state: GlobalState) => state);
-  const dispatch = useDispatch();
+  const [userData] = useStorage('userData');
 
   const [_, setUserStatus] = useStorage('userStatus');
   const [role, setRole] = useStorage('userRole', 'admin');
@@ -59,18 +58,6 @@ function Navbar({ show }: { show: boolean }) {
       Message.info(`You clicked ${key}`);
     }
   }
-
-  useEffect(() => {
-    dispatch({
-      type: 'update-userInfo',
-      payload: {
-        userInfo: {
-          ...userInfo,
-          permissions: generatePermission(role),
-        },
-      },
-    });
-  }, [role]);
 
   if (!show) {
     return (
@@ -149,13 +136,13 @@ function Navbar({ show }: { show: boolean }) {
         </div>
       </div>
       <ul className={styles.right}>
-        <li>
+        {/* <li>
           <Input.Search
             className={styles.round}
             placeholder={t['navbar.search.placeholder']}
           />
-        </li>
-        <li>
+        </li> */}
+        {/* <li>
           <Select
             triggerElement={<IconButton icon={<IconLanguage />} />}
             options={[
@@ -175,7 +162,7 @@ function Navbar({ show }: { show: boolean }) {
               Message.info(`${nextLang['message.lang.tips']}${value}`);
             }}
           />
-        </li>
+        </li> */}
         <li>
           <MessageBox>
             <IconButton icon={<IconNotification />} />
@@ -196,15 +183,11 @@ function Navbar({ show }: { show: boolean }) {
           </Tooltip>
         </li>
         <Settings />
-        {userInfo && (
+        {userData && (
           <li>
-            <Dropdown droplist={droplist} position="br" disabled={userLoading}>
+            <Dropdown droplist={droplist} position="br">
               <Avatar size={32} style={{ cursor: 'pointer' }}>
-                {userLoading ? (
-                  <IconLoading />
-                ) : (
-                  <img alt="avatar" src={userInfo.avatar} />
-                )}
+                <img alt="avatar" src={userData?.avatar} />
               </Avatar>
             </Dropdown>
           </li>

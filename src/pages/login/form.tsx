@@ -32,7 +32,7 @@ export default function LoginForm() {
   function afterLoginSuccess(params) {
     // 记住密码
     if (rememberPassword) {
-      setLoginParams(JSON.stringify(params));
+      setLoginParams(params);
     } else {
       removeLoginParams();
     }
@@ -50,9 +50,9 @@ export default function LoginForm() {
         ? await post('landlord/register', params)
         : await post('landlord', params);
       if (code == 200) {
-        setUserData(JSON.stringify(data));
-        afterLoginSuccess(params);
         Message.success(isRegister ? '注册并登录成功!' : '登录成功!');
+        setUserData(data);
+        afterLoginSuccess(params);
         setLoading(false);
       } else {
         setErrorMessage(msg);
@@ -75,7 +75,7 @@ export default function LoginForm() {
     const rememberPassword = !!loginParams;
     setRememberPassword(rememberPassword);
     if (formRef.current && rememberPassword) {
-      const parseParams = JSON.parse(loginParams);
+      const parseParams = loginParams;
       formRef.current.setFieldsValue(parseParams);
     }
   }, [loginParams]);

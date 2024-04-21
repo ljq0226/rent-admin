@@ -14,15 +14,15 @@ const getDefaultStorage = (key) => {
 
 function useStorage(
   key: string,
-  defaultValue?: string
-): [string, (string) => void, () => void] {
+  defaultValue?: any
+): [any, (string) => void, () => void] {
   const [storedValue, setStoredValue] = useState(
     getDefaultStorage(key) || defaultValue
   );
 
-  const setStorageValue = (value: string) => {
+  const setStorageValue = (value: any) => {
     if (!isSSR) {
-      localStorage.setItem(key, value);
+      localStorage.setItem(key, JSON.stringify(value));
       if (value !== storedValue) {
         setStoredValue(value);
       }
@@ -42,7 +42,11 @@ function useStorage(
     }
   }, []);
 
-  return [storedValue, setStorageValue, removeStorage];
+  try {
+    return [JSON.parse(storedValue), setStorageValue, removeStorage];
+  } catch (err) {
+    return [storedValue, setStorageValue, removeStorage];
+  }
 }
 
 export default useStorage;
