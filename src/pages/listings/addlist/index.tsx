@@ -36,10 +36,8 @@ function GroupForm() {
     delete formValue.rentTime;
     const postdata = {
       ...formValue,
-      // images: images?.join(";"),
-      // cover: images[0] || "",
-      images: '',
-      cover: '',
+      images: images?.join(';'),
+      cover: images[0] || '',
       code,
       availableFrom: new Date(availableFrom),
       availableUntil: new Date(availableUntil),
@@ -106,7 +104,15 @@ function GroupForm() {
                 <Textarea placeholder="房源描述" />
               </Form.Item>
             </Grid.Col>
-            <Grid.Col span={12}></Grid.Col>
+            <Grid.Col span={12}>
+              <Form.Item
+                label={'房源附近描述'}
+                field="nearbyInfo"
+                initialValue={''}
+              >
+                <Textarea placeholder="房源附近描述" />
+              </Form.Item>
+            </Grid.Col>
           </Grid.Row>
           <Grid.Row>
             <Form.Item label={'房源图片'} field="images" initialValue={''}>

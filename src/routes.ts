@@ -47,6 +47,36 @@ export const routes: IRoute[] = [
     ],
   },
   {
+    name: 'menu.tenant',
+    key: 'tenant',
+    children: [
+      {
+        name: 'menu.tenant.list',
+        key: 'tenant/list',
+      },
+    ],
+  },
+  {
+    name: 'menu.order',
+    key: 'order',
+    children: [
+      {
+        name: 'menu.order.list',
+        key: 'order/list',
+      },
+    ],
+  },
+  {
+    name: 'menu.contract',
+    key: 'contract',
+    children: [
+      {
+        name: 'menu.contract.list',
+        key: 'contract/list',
+      },
+    ],
+  },
+  {
     name: 'menu.visualization',
     key: 'visualization',
     children: [
@@ -75,40 +105,6 @@ export const routes: IRoute[] = [
     ],
   },
   {
-    name: 'menu.list',
-    key: 'list',
-    children: [
-      {
-        name: 'menu.list.searchTable',
-        key: 'list/search-table',
-      },
-      {
-        name: 'menu.list.cardList',
-        key: 'list/card',
-      },
-    ],
-  },
-  {
-    name: 'menu.form',
-    key: 'form',
-    children: [
-      {
-        name: 'menu.form.group',
-        key: 'form/group',
-        requiredPermissions: [
-          { resource: 'menu.form.group', actions: ['read', 'write'] },
-        ],
-      },
-      {
-        name: 'menu.form.step',
-        key: 'form/step',
-        requiredPermissions: [
-          { resource: 'menu.form.step', actions: ['read'] },
-        ],
-      },
-    ],
-  },
-  {
     name: 'menu.profile',
     key: 'profile',
     children: [
@@ -132,24 +128,6 @@ export const routes: IRoute[] = [
         name: 'menu.result.error',
         key: 'result/error',
         breadcrumb: false,
-      },
-    ],
-  },
-  {
-    name: 'menu.exception',
-    key: 'exception',
-    children: [
-      {
-        name: 'menu.exception.403',
-        key: 'exception/403',
-      },
-      {
-        name: 'menu.exception.404',
-        key: 'exception/404',
-      },
-      {
-        name: 'menu.exception.500',
-        key: 'exception/500',
       },
     ],
   },

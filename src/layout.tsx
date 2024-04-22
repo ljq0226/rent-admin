@@ -40,6 +40,14 @@ function getIconFromKey(key) {
       return <IconDashboard className={styles.icon} />;
     case 'listings':
       return <IconDashboard className={styles.icon} />;
+    case 'tenant':
+      return <IconApps className={styles.icon} />;
+    case 'order':
+      return <IconApps className={styles.icon} />;
+    case 'contract':
+      return <IconApps className={styles.icon} />;
+    case 'visualization':
+      return <IconApps className={styles.icon} />;
     case 'list':
       return <IconList className={styles.icon} />;
     case 'form':
