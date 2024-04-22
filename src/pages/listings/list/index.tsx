@@ -18,6 +18,7 @@ import './mock';
 import { getColumns, IsChecked } from './constants';
 import useStorage from '@/utils/useStorage';
 import { get } from '@/utils/http';
+import { useHistory } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -27,7 +28,8 @@ function SearchTable() {
   const tableCallback = async (record, type) => {
     console.log(record, type);
   };
-
+  const history = useHistory();
+  const pathname = history.location.pathname;
   const columns = useMemo(() => getColumns(t, tableCallback), [t]);
 
   const [data, setData] = useState([]);
@@ -129,10 +131,15 @@ function SearchTable() {
       >
         <div className={styles['button-group']}>
           <Space>
-            <Button type="primary" icon={<IconPlus />}>
-              {t['searchTable.operations.add']}
+            <Button
+              type="primary"
+              icon={<IconPlus />}
+              onClick={() => {
+                history.push(`${pathname}/addlist`);
+              }}
+            >
+              {'新建'}
             </Button>
-            <Button>{t['searchTable.operations.upload']}</Button>
           </Space>
           <Space>
             <Button icon={<IconDownload />}>

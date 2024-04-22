@@ -14,6 +14,13 @@ const ContentIcon = [
   <IconHorizontalVideo key={1} />,
   <IconVerticalVideo key={2} />,
 ];
+export const HouseDirection = [
+  { value: '朝东', label: '朝东' },
+  { value: '朝南', label: '朝南' },
+  { value: '朝西', label: '朝西' },
+  { value: '朝北', label: '朝北' },
+];
+
 export const PriceTypeMap: Record<PriceType, string> = {
   DAILY: '日租',
   WEEKLY: '周租',
