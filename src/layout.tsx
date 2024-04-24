@@ -41,7 +41,11 @@ function getIconFromKey(key) {
   switch (key) {
     case 'dashboard':
       return <IconDashboard className={styles.icon} />;
+    case 'user2':
+      return <IconDashboard className={styles.icon} />;
     case 'listings':
+      return <IconDashboard className={styles.icon} />;
+    case 'review':
       return <IconDashboard className={styles.icon} />;
     case 'tenant':
       return <IconApps className={styles.icon} />;

@@ -70,61 +70,6 @@ export const routes: IRoute[] = [
     ],
   },
   {
-    name: 'menu.visualization',
-    key: 'visualization',
-    children: [
-      {
-        name: 'menu.visualization.dataAnalysis',
-        key: 'visualization/data-analysis',
-        requiredPermissions: [
-          { resource: 'menu.visualization.dataAnalysis', actions: ['read'] },
-        ],
-      },
-      {
-        name: 'menu.visualization.multiDimensionDataAnalysis',
-        key: 'visualization/multi-dimension-data-analysis',
-        requiredPermissions: [
-          {
-            resource: 'menu.visualization.dataAnalysis',
-            actions: ['read', 'write'],
-          },
-          {
-            resource: 'menu.visualization.multiDimensionDataAnalysis',
-            actions: ['write'],
-          },
-        ],
-        oneOfPerm: true,
-      },
-    ],
-  },
-  {
-    name: 'menu.profile',
-    key: 'profile',
-    children: [
-      {
-        name: 'menu.profile.basic',
-        key: 'profile/basic',
-      },
-    ],
-  },
-
-  {
-    name: 'menu.result',
-    key: 'result',
-    children: [
-      {
-        name: 'menu.result.success',
-        key: 'result/success',
-        breadcrumb: false,
-      },
-      {
-        name: 'menu.result.error',
-        key: 'result/error',
-        breadcrumb: false,
-      },
-    ],
-  },
-  {
     name: 'menu.user',
     key: 'user',
     children: [
@@ -172,12 +117,16 @@ export const routes_admin: IRoute[] = [
     ],
   },
   {
-    name: 'menu.tenant',
-    key: 'tenant',
+    name: 'menu.user2',
+    key: 'user2',
     children: [
       {
-        name: 'menu.tenant.list',
-        key: 'tenant/list',
+        name: 'menu.user2.tenantlist',
+        key: 'user2/tenantlist',
+      },
+      {
+        name: 'menu.user2.landlordlist',
+        key: 'user2/landlordlist',
       },
     ],
   },
@@ -198,6 +147,16 @@ export const routes_admin: IRoute[] = [
       {
         name: 'menu.contract.list',
         key: 'contract/list',
+      },
+    ],
+  },
+  {
+    name: 'menu.review',
+    key: 'review',
+    children: [
+      {
+        name: 'menu.review.list',
+        key: 'review/list',
       },
     ],
   },
@@ -226,33 +185,6 @@ export const routes_admin: IRoute[] = [
           },
         ],
         oneOfPerm: true,
-      },
-    ],
-  },
-  {
-    name: 'menu.profile',
-    key: 'profile',
-    children: [
-      {
-        name: 'menu.profile.basic',
-        key: 'profile/basic',
-      },
-    ],
-  },
-
-  {
-    name: 'menu.result',
-    key: 'result',
-    children: [
-      {
-        name: 'menu.result.success',
-        key: 'result/success',
-        breadcrumb: false,
-      },
-      {
-        name: 'menu.result.error',
-        key: 'result/error',
-        breadcrumb: false,
       },
     ],
   },

@@ -37,6 +37,7 @@ function GroupForm() {
   useEffect(() => {
     formRef.current.setFieldsValue({
       ...record,
+      rentType: record.rentType + '',
       rentTime: [dayjs(record.availableFrom), dayjs(record.availableUntil)],
     });
     setImages(record.images?.split(';'));
