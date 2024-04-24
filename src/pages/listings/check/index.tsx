@@ -29,6 +29,11 @@ function SearchTable() {
   const history = useHistory();
   const pathname = history.location.pathname;
   const tableCallback = async (record, type) => {
+    if (type == 'check') {
+      history.push(`${pathname}/checklist?check=true&id=${record.id}`, {
+        record,
+      });
+    }
     if (type == 'edit') {
       history.push(`${pathname}/editlist?edit=true&id=${record.id}`, {
         record,
@@ -97,9 +102,7 @@ function SearchTable() {
     setLoading(true);
     try {
       const { code, data, msg }: { code: number; data: any; msg: string } =
-        userData?.role == 'ADMIN'
-          ? await get(`listing/getall_listing`)
-          : await get(`listing/getall_listing_byid/${userData?.id}`);
+        await get(`listing/getall_uncheck_listing`);
       if (code === 200) {
         const arr = data.arr as any[];
         setData(arr);

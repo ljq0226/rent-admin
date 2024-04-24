@@ -37,12 +37,137 @@ export const routes: IRoute[] = [
         name: 'menu.listings.list',
         key: 'listings/list',
       },
+    ],
+  },
+  {
+    name: 'menu.tenant',
+    key: 'tenant',
+    children: [
       {
-        name: 'menu.listings.monitor',
-        key: 'listings/monitor',
+        name: 'menu.tenant.list',
+        key: 'tenant/list',
+      },
+    ],
+  },
+  {
+    name: 'menu.order',
+    key: 'order',
+    children: [
+      {
+        name: 'menu.order.list',
+        key: 'order/list',
+      },
+    ],
+  },
+  {
+    name: 'menu.contract',
+    key: 'contract',
+    children: [
+      {
+        name: 'menu.contract.list',
+        key: 'contract/list',
+      },
+    ],
+  },
+  {
+    name: 'menu.visualization',
+    key: 'visualization',
+    children: [
+      {
+        name: 'menu.visualization.dataAnalysis',
+        key: 'visualization/data-analysis',
         requiredPermissions: [
-          { resource: 'menu.listings.monitor', actions: ['write'] },
+          { resource: 'menu.visualization.dataAnalysis', actions: ['read'] },
         ],
+      },
+      {
+        name: 'menu.visualization.multiDimensionDataAnalysis',
+        key: 'visualization/multi-dimension-data-analysis',
+        requiredPermissions: [
+          {
+            resource: 'menu.visualization.dataAnalysis',
+            actions: ['read', 'write'],
+          },
+          {
+            resource: 'menu.visualization.multiDimensionDataAnalysis',
+            actions: ['write'],
+          },
+        ],
+        oneOfPerm: true,
+      },
+    ],
+  },
+  {
+    name: 'menu.profile',
+    key: 'profile',
+    children: [
+      {
+        name: 'menu.profile.basic',
+        key: 'profile/basic',
+      },
+    ],
+  },
+
+  {
+    name: 'menu.result',
+    key: 'result',
+    children: [
+      {
+        name: 'menu.result.success',
+        key: 'result/success',
+        breadcrumb: false,
+      },
+      {
+        name: 'menu.result.error',
+        key: 'result/error',
+        breadcrumb: false,
+      },
+    ],
+  },
+  {
+    name: 'menu.user',
+    key: 'user',
+    children: [
+      {
+        name: 'menu.user.info',
+        key: 'user/info',
+      },
+      {
+        name: 'menu.user.setting',
+        key: 'user/setting',
+      },
+    ],
+  },
+];
+export const routes_admin: IRoute[] = [
+  {
+    name: 'menu.dashboard',
+    key: 'dashboard',
+    children: [
+      {
+        name: 'menu.dashboard.workplace',
+        key: 'dashboard/workplace',
+      },
+      {
+        name: 'menu.dashboard.monitor',
+        key: 'dashboard/monitor',
+        requiredPermissions: [
+          { resource: 'menu.dashboard.monitor', actions: ['write'] },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'menu.listings',
+    key: 'listings',
+    children: [
+      {
+        name: 'menu.listings.list',
+        key: 'listings/list',
+      },
+      {
+        name: 'menu.listings.check',
+        key: 'listings/check',
       },
     ],
   },
@@ -146,7 +271,6 @@ export const routes: IRoute[] = [
     ],
   },
 ];
-
 export const getName = (path: string, routes) => {
   return routes.find((item) => {
     const itemPath = `/${item.key}`;
@@ -171,12 +295,13 @@ export const generatePermission = (role: string) => {
   return result;
 };
 
-const useRoute = (userPermission): [IRoute[], string] => {
-  const filterRoute = (routes: IRoute[], arr = []): IRoute[] => {
-    if (!routes.length) {
+const useRoute = (userPermission, isAdmin = false): [IRoute[], string] => {
+  const _routes = isAdmin ? routes_admin : routes;
+  const filterRoute = (_routes: IRoute[], arr = []): IRoute[] => {
+    if (!_routes.length) {
       return [];
     }
-    for (const route of routes) {
+    for (const route of _routes) {
       const { requiredPermissions, oneOfPerm } = route;
       let visible = true;
       if (requiredPermissions) {
@@ -199,10 +324,10 @@ const useRoute = (userPermission): [IRoute[], string] => {
     return arr;
   };
 
-  const [permissionRoute, setPermissionRoute] = useState(routes);
+  const [permissionRoute, setPermissionRoute] = useState(_routes);
 
   useEffect(() => {
-    const newRoutes = filterRoute(routes);
+    const newRoutes = filterRoute(_routes);
     setPermissionRoute(newRoutes);
   }, [JSON.stringify(userPermission)]);
 

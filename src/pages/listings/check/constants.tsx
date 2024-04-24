@@ -142,9 +142,9 @@ export function getColumns(
             <Button
               type="text"
               size="small"
-              onClick={() => callback(record, 'view')}
+              onClick={() => callback(record, 'check')}
             >
-              {'查看'}
+              {'审核'}
             </Button>
           }
           <Button

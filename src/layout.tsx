@@ -19,6 +19,8 @@ import qs from 'query-string';
 import NProgress from 'nprogress';
 import Navbar from './components/NavBar';
 import AddList from './pages/listings/addlist';
+import EditList from './pages/listings/editlist';
+import CheckList from './pages/listings/checklist';
 import Footer from './components/Footer';
 import useRoute, { IRoute } from '@/routes';
 import { isArray } from './utils/is';
@@ -27,6 +29,7 @@ import getUrlParams from './utils/getUrlParams';
 import lazyload from './utils/lazyload';
 import { GlobalState } from './store';
 import styles from './style/layout.module.less';
+import useStorage from './utils/useStorage';
 
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
@@ -80,8 +83,8 @@ function getFlattenRoutes(routes) {
           route.component = lazyload(mod[`./pages/${route.key}/index.tsx`]);
           res.push(route);
         } catch (e) {
-          console.log(route.key);
-          console.error(e);
+          // console.log(route.key);
+          // console.error(e);
         }
       }
 
@@ -100,11 +103,15 @@ function PageLayout() {
   const pathname = history.location.pathname;
   const currentComponent = qs.parseUrl(pathname).url.slice(1);
   const locale = useLocale();
+  const [userData] = useStorage('userData');
   const { settings, userLoading, userInfo } = useSelector(
     (state: GlobalState) => state
   );
 
-  const [routes, defaultRoute] = useRoute(userInfo?.permissions);
+  const [routes, defaultRoute] = useRoute(
+    userInfo?.permissions,
+    userData.role == 'ADMIN'
+  );
   const defaultSelectedKeys = [currentComponent || defaultRoute];
   const paths = (currentComponent || defaultRoute).split('/');
   const defaultOpenKeys = paths.slice(0, paths.length - 1);
@@ -278,6 +285,11 @@ function PageLayout() {
               <Content>
                 <Switch>
                   <Route path="/listings/list/addlist" component={AddList} />
+                  <Route path="/listings/list/editlist" component={EditList} />
+                  <Route
+                    path="/listings/check/checklist"
+                    component={CheckList}
+                  />
                   {flattenRoutes.map((route, index) => {
                     return (
                       <Route

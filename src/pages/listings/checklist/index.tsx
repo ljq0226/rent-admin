@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Typography,
   Card,
@@ -18,59 +18,52 @@ import styles from './style/index.module.less';
 import Textarea from '@arco-design/web-react/es/Input/textarea';
 import { HouseDirection, PriceTypeMap } from '../list/constants';
 import dayjs from 'dayjs';
-import useStorage from '@/utils/useStorage';
 import { post } from '@/utils/http';
-import { ImageUploader } from '@/components/ImagesUploader';
-
+import { ImageUploader, ImagesContent } from '@/components/ImagesUploader';
+import { useLocation } from 'react-router-dom';
 function GroupForm() {
   const t = useLocale(locale);
   const formRef = useRef<FormInstance>();
   const [loading, setLoading] = useState(false);
-  const [userData] = useStorage('userData');
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const [isEdit, setIsEdit] = useState(!params.get('edit'));
+  const [record, setRecord] = useState(location.state.record);
   // 图片上传
   const [images, setImages] = useState<string[]>([]);
-  async function submit(formValue) {
-    const code = '';
-    const [availableFrom, availableUntil] = formValue.rentTime;
-    delete formValue.rentTime;
-    const postdata = {
-      ...formValue,
-      images: images?.join(';'),
-      cover: images[0] || '',
-      code,
-      availableFrom: new Date(availableFrom),
-      availableUntil: new Date(availableUntil),
-      landlordId: userData?.id,
-      //每次发布或修改都将重新进行审核
-      isChecked: 0,
-    };
+
+  useEffect(() => {
+    formRef.current.setFieldsValue({
+      ...record,
+      rentTime: [dayjs(record.availableFrom), dayjs(record.availableUntil)],
+    });
+    setImages(record.images?.split(';'));
+  }, []);
+
+  async function handleSubmit(isSuccess: boolean) {
     try {
-      setLoading(true);
-      const { code, data, msg } = await post(`listing/add_listing`, postdata);
+      const { code, msg } = await post('listing/check_listing', {
+        id: params.get('id'),
+        isSuccess,
+      });
       if (code == 200) {
-        console.log('data', data);
-        Message.success('新增房源成功!');
+        Message.success('审核成功');
       } else {
       }
-    } catch (error: any) {
-    } finally {
-      setLoading(false);
+      history.back();
+    } catch (err: any) {
+      Message.error(err.toString());
     }
-  }
-
-  function handleSubmit() {
-    formRef.current.validate().then((values) => {
-      submit(values);
-    });
-  }
-
-  function handleReset() {
-    formRef.current.resetFields();
   }
 
   return (
     <div className={styles.container}>
-      <Form layout="vertical" ref={formRef} className={styles['form-group']}>
+      <Form
+        layout="vertical"
+        ref={formRef}
+        className={styles['form-group']}
+        disabled={isEdit}
+      >
         <Card>
           <Typography.Title heading={6}>{'基本信息'}</Typography.Title>
           <Grid.Row gutter={80}>
@@ -115,7 +108,11 @@ function GroupForm() {
           </Grid.Row>
           <Grid.Row>
             <Form.Item label={'房源图片'} field="images" initialValue={''}>
-              <ImageUploader images={images} setImages={setImages} />
+              {!isEdit ? (
+                <ImageUploader images={images} setImages={setImages} />
+              ) : (
+                <ImagesContent images={images} />
+              )}
             </Form.Item>
           </Grid.Row>
         </Card>
@@ -287,21 +284,23 @@ function GroupForm() {
           </Grid.Row>
         </Card>
       </Form>
-      <div className={styles.actions}>
-        <Space>
-          <Button onClick={handleReset} size="large">
-            {t['groupForm.reset']}
-          </Button>
-          <Button
-            type="primary"
-            onClick={handleSubmit}
-            loading={loading}
-            size="large"
-          >
-            {t['groupForm.submit']}
-          </Button>
-        </Space>
-      </div>
+      {
+        <div className={styles.actions}>
+          <Space>
+            <Button onClick={() => handleSubmit(false)} size="large">
+              审核不通过
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => handleSubmit(true)}
+              loading={loading}
+              size="large"
+            >
+              审核通过
+            </Button>
+          </Space>
+        </div>
+      }
     </div>
   );
 }
