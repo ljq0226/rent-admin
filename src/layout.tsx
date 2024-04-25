@@ -19,6 +19,7 @@ import qs from 'query-string';
 import NProgress from 'nprogress';
 import Navbar from './components/NavBar';
 import AddList from './pages/listings/addlist';
+import AddOrder from './pages/order/addorder';
 import EditList from './pages/listings/editlist';
 import CheckList from './pages/listings/checklist';
 import Footer from './components/Footer';
@@ -288,6 +289,7 @@ function PageLayout() {
               )}
               <Content>
                 <Switch>
+                  <Route path="/order/addorder" component={AddOrder} />
                   <Route path="/listings/list/addlist" component={AddList} />
                   <Route path="/listings/list/editlist" component={EditList} />
                   <Route

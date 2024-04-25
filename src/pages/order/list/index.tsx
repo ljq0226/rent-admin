@@ -9,6 +9,7 @@ import {
   Message,
 } from '@arco-design/web-react';
 import { IconDownload, IconPlus } from '@arco-design/web-react/icon';
+import axios from 'axios';
 import useLocale from '@/utils/useLocale';
 import SearchForm from './form';
 import locale from './locale';
@@ -27,15 +28,7 @@ function SearchTable() {
   const history = useHistory();
   const pathname = history.location.pathname;
   const tableCallback = async (record, type) => {
-    if (type == 'edit') {
-      history.push(`${pathname}/editlist?edit=true&id=${record.id}`, {
-        record,
-      });
-    } else if (type == 'view') {
-      history.push(`${pathname}/editlist?edit=&id=${record.id}`, {
-        record,
-      });
-    } else if (type == 'delete') {
+    if (type == 'delete') {
       onConfirmDelete(record?.id);
     }
   };
@@ -62,27 +55,23 @@ function SearchTable() {
       return;
     }
 
-    const { address, isChecked, priceType, status, title }: any = formParams;
+    const { ordername, tenantName, landlordName, contractId, status }: any =
+      formParams;
     const newArr = initData.filter((item) => {
       let flag = true;
-      // 过滤地址
-      if (address && item.address !== address) {
+      if (ordername && item.ordername !== ordername) {
         flag = false;
       }
-      // 过滤是否选中
-      if (isChecked && !isChecked?.includes(item.isChecked)) {
+      if (tenantName && item.tenantName !== tenantName) {
         flag = false;
       }
-      // 过滤价格类型
-      if (priceType && !priceType?.includes(item.priceType)) {
+      if (landlordName && item.landlordName !== landlordName) {
         flag = false;
       }
-      // 过滤状态
+      if (contractId && item.contractId !== contractId) {
+        flag = false;
+      }
       if (status && !status?.includes(item.status)) {
-        flag = false;
-      }
-      // 过滤标题
-      if (title && item.title !== title) {
         flag = false;
       }
       return flag;
@@ -96,8 +85,8 @@ function SearchTable() {
     try {
       const { code, data, msg }: { code: number; data: any; msg: string } =
         userData?.role == 'ADMIN'
-          ? await get(`listing/getall_listing`)
-          : await get(`listing/getall_listing_byid/${userData?.id}`);
+          ? await get(`order/get_all_order`)
+          : await get(`order/get_landlord_order/${userData?.id}`);
       if (code === 200) {
         const arr = data.arr as any[];
         setData(arr);
@@ -117,13 +106,13 @@ function SearchTable() {
   }
   const onConfirmDelete = async (id) => {
     try {
-      const { code, msg } = await post(`listing/delete_listing/${id}`, {});
+      const { code, msg } = await post(`order/cancel_order/${id}`, {});
       if (code == 200) {
-        Message.info('删除成功!');
+        Message.info('取消成功!');
         fetchData();
       }
     } catch (err) {
-      Message.error('删除失败!');
+      Message.error('取消失败!');
     }
   };
   function onChangeTable({ current, pageSize }) {
@@ -149,15 +138,10 @@ function SearchTable() {
             type="primary"
             icon={<IconPlus />}
             onClick={() => {
-              history.push(`${pathname}/addlist`);
+              history.push(`/order/addorder`);
             }}
           >
             {'新建'}
-          </Button>
-        </Space>
-        <Space>
-          <Button icon={<IconDownload />}>
-            {t['searchTable.operation.download']}
           </Button>
         </Space>
       </div>

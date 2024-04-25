@@ -57,6 +57,10 @@ export const routes: IRoute[] = [
         name: 'menu.order.list',
         key: 'order/list',
       },
+      {
+        name: 'menu.order.addorder',
+        key: 'order/addorder',
+      },
     ],
   },
   {

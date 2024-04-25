@@ -70,6 +70,7 @@ const i18n = {
     'menu.listings.list': '房源列表',
     'menu.listings.check': '房源审核',
     'menu.order': '订单管理',
+    'menu.order.addorder': '新建订单',
     'menu.order.list': '订单列表',
     'menu.tenant': '租户管理',
     'menu.tenant.list': '租户列表',
