@@ -26,8 +26,12 @@ function SearchTable() {
   const t = useLocale(locale);
   const [userData] = useStorage('userData');
   const history = useHistory();
-  const pathname = history.location.pathname;
   const tableCallback = async (record, type) => {
+    if (type == 'link') {
+      history.push(`/listings/list/editlist?edit=&id=${record?.id}`, {
+        record,
+      });
+    }
     if (type == 'delete') {
       onConfirmDelete(record?.id);
     }
@@ -108,11 +112,11 @@ function SearchTable() {
     try {
       const { code, msg } = await post(`order/cancel_order/${id}`, {});
       if (code == 200) {
-        Message.info('取消成功!');
+        Message.info('取消订单成功!');
         fetchData();
       }
     } catch (err) {
-      Message.error('取消失败!');
+      Message.error('取消订单失败!');
     }
   };
   function onChangeTable({ current, pageSize }) {

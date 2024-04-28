@@ -45,7 +45,7 @@ export const routes: IRoute[] = [
     children: [
       {
         name: 'menu.tenant.list',
-        key: 'tenant/list',
+        key: 'user2/tenantlist',
       },
     ],
   },

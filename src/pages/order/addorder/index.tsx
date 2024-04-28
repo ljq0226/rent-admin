@@ -47,6 +47,8 @@ function GroupForm() {
       landlordName: userData.username,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
+      listingId: listing.id,
+      listingTitle: listing.title,
     };
     try {
       const { code, data, msg } = await post('order/create_order', postData);

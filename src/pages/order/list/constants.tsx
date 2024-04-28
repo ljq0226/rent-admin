@@ -57,6 +57,18 @@ export function getColumns(
       title: '房东',
     },
     {
+      dataIndex: 'listingTitle',
+      title: '房源标题',
+      render: (title, record) => (
+        <div
+          onClick={() => callback(record?.listing, 'link')}
+          className="underline cursor-pointer text-[#1890ff]"
+        >
+          {title}
+        </div>
+      ),
+    },
+    {
       dataIndex: 'tenantName',
       title: '租客',
     },
